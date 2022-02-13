@@ -13,6 +13,14 @@ const App: React.FC = () => {
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
+    if (from?.from === "edit") {
+      setTodos(
+        todos.map((tododd) =>
+          tododd.id === from.id ? { ...tododd, todo: todo } : tododd
+        )
+      );
+    }
+
     if (todo) {
       setTodos([
         ...todos,
@@ -48,10 +56,11 @@ const App: React.FC = () => {
     });
   };
 
-  useEffect(() => {
-    if (from.from === "edit") {
-    }
-  }, [from]);
+  // useEffect(() => {
+  //   if (from?.from === "edit") {
+  //     console.log("hey");
+  //   }
+  // }, [from]);
 
   return (
     <div>
