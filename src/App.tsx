@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Input from "./Input";
 import { Todo } from "./model";
 
+interface FromInt {
+  from: string;
+  id: number;
+}
 const App: React.FC = () => {
   const [todo, settodo] = useState<string>("");
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [from, setFrom] = useState<string>("");
+  const [from, setFrom] = useState<FromInt>();
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +42,17 @@ const App: React.FC = () => {
 
   const edit = (todoItem: Todo) => {
     settodo(todoItem.todo);
+    setFrom({
+      from: "edit",
+      id: todoItem.id,
+    });
   };
+
+  useEffect(() => {
+    if (from.from === "edit") {
+    }
+  }, [from]);
+
   return (
     <div>
       <h1>Taskify</h1>
