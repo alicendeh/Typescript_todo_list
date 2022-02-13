@@ -1,26 +1,83 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Input from "./Input";
+import { Todo } from "./model";
 
-function App() {
+const App: React.FC = () => {
+  const [todo, settodo] = useState<string>("");
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [from, setFrom] = useState<string>("");
+
+  const handleAdd = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (todo) {
+      setTodos([
+        ...todos,
+        {
+          id: Date.now(),
+          todo,
+          isDone: false,
+        },
+      ]);
+      settodo("");
+    }
+  };
+
+  const done = (id: number) => {
+    let newArray: Todo[] = [...todos];
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
+      )
+    );
+  };
+
+  const del = (id: number) => {
+    let newp: Todo[] = todos.filter((todo) => todo.id !== id);
+    setTodos([...newp]);
+  };
+
+  const edit = (todoItem: Todo) => {
+    settodo(todoItem.todo);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Taskify</h1>
+      <Input todo={todo} setTodo={settodo} handleAdd={handleAdd} />
+      {todos &&
+        todos.map((todoItem) => (
+          <div
+            key={todoItem.id}
+            style={{
+              backgroundColor: "#2102ff",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 12,
+            }}
+          >
+            <p>{todoItem.todo} </p>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <button onClick={() => edit(todoItem)}>edit</button>
+              <button onClick={() => del(todoItem.id)}>delete</button>
+              <button
+                style={{
+                  backgroundColor: todoItem.isDone ? "green" : "red",
+                }}
+                onClick={() => done(todoItem.id)}
+              >
+                {todoItem.isDone ? "COMPLETED" : "INCOMPLETED"}
+              </button>
+            </div>
+          </div>
+        ))}
     </div>
   );
-}
+};
 
 export default App;
